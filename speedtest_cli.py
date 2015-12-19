@@ -15,6 +15,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+# ---------
+# Updated to output the "simple (--simple)" format with a timestamp and in kv pairs
+# mods by: Steve Brant
+# ---------
+
 import os
 import re
 import sys
@@ -24,8 +29,13 @@ import socket
 import timeit
 import platform
 import threading
+from datetime import *
 
 __version__ = '0.3.4'
+
+# Set datetime variable
+stamp = datetime.now()
+hstamp = stamp.strftime("%m/%d/%Y %H:%M:%S")
 
 # Some global variables we use
 user_agent = None
@@ -706,7 +716,7 @@ def speedtest():
         print_(('Hosted by %(sponsor)s (%(name)s) [%(d)0.2f km]: '
                '%(latency)s ms' % best).encode('utf-8', 'ignore'))
     else:
-        print_('Ping: %(latency)s ms' % best)
+        print_(hstamp, 'units=ms', 'Ping=%(latency)s' % best)
 
     sizes = [350, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000]
     urls = []
@@ -719,8 +729,8 @@ def speedtest():
     dlspeed = downloadSpeed(urls, args.simple)
     if not args.simple:
         print_()
-    print_('Download: %0.2f M%s/s' %
-           ((dlspeed / 1000 / 1000) * args.units[1], args.units[0]))
+    print_(hstamp, 'units=Mbps', 'Download=%0.2f' %
+          ((dlspeed / 1000 / 1000) * args.units[1]))
 
     sizesizes = [int(.25 * 1000 * 1000), int(.5 * 1000 * 1000)]
     sizes = []
@@ -732,8 +742,8 @@ def speedtest():
     ulspeed = uploadSpeed(best['url'], sizes, args.simple)
     if not args.simple:
         print_()
-    print_('Upload: %0.2f M%s/s' %
-           ((ulspeed / 1000 / 1000) * args.units[1], args.units[0]))
+    print_(hstamp, 'units=Mbps', 'Upload=%0.2f' %
+           ((ulspeed / 1000 / 1000) * args.units[1]))
 
     if args.share and args.mini:
         print_('Cannot generate a speedtest.net share results image while '
