@@ -31,7 +31,7 @@ import platform
 import threading
 from datetime import *
 
-__version__ = '0.3.4'
+__version__ = '0.3.4.1'
 
 # Set datetime variable
 stamp = datetime.now()
